@@ -26,10 +26,10 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={`fixed top-0 z-50 w-full transition-all duration-500 ${
-        scrolled ? "glass-nav border-b border-white/60 shadow-sm" : "bg-white/40 backdrop-blur-sm"
+        scrolled ? "glass-nav border-b border-white/60 shadow-sm" : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-3 px-5 sm:px-8">
+      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center justify-between gap-3 px-6 sm:px-10 xl:px-14">
         <Logo compact uid="nav" />
         <nav className="hidden items-center gap-8 md:flex">
           {links.map((link) => (

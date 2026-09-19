@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 import { CircuitBackground } from "./CircuitBackground";
@@ -19,19 +24,38 @@ const FLOWS = [
 ];
 
 export function ArchitectureSection() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.22 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(contentRef, { once: true, amount: 0.15 });
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+  const cardY = useTransform(scrollYProgress, [0, 0.28], [80, 0]);
+  const cardOpacity = useTransform(scrollYProgress, [0, 0.2], [0.55, 1]);
 
   return (
-    <section id="architecture" className="relative overflow-hidden bg-white py-16 sm:py-24">
-      <CircuitBackground uid="architecture" />
+    <section
+      id="architecture"
+      ref={sectionRef}
+      className="relative z-20 -mt-[100vh] overflow-hidden bg-white pt-[18vh] pb-20 sm:pt-[22vh] sm:pb-28"
+    >
+      <motion.div style={{ y: bgY }} className="absolute inset-[-12%] will-change-transform">
+        <CircuitBackground uid="architecture" />
+      </motion.div>
 
-      <div ref={ref} className="relative z-10 mx-auto max-w-6xl px-5 sm:px-8">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-transparent via-white/80 to-white"
+        aria-hidden
+      />
+
+      <div ref={contentRef} className="relative z-10 mx-auto max-w-[1440px] px-6 sm:px-10 xl:px-14">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-[28px] bg-white shadow-[0_24px_70px_rgba(20,60,90,0.12)] sm:rounded-[36px]"
+          style={{ y: cardY, opacity: cardOpacity }}
+          className="relative will-change-transform overflow-hidden rounded-[28px] bg-white shadow-[0_30px_90px_rgba(20,60,90,0.18)] sm:rounded-[36px]"
         >
           <div className="relative">
             <Image

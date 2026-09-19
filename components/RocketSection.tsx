@@ -5,9 +5,10 @@ import {
   motion,
   useScroll,
   useTransform,
+  useInView,
   type MotionValue,
 } from "framer-motion";
-import { CircuitBackground } from "./CircuitBackground";
+import { CyberVideoBackground } from "./CyberVideoBackground";
 
 const rows = [
   {
@@ -23,6 +24,9 @@ const rows = [
 
 export function RocketSection() {
   const ref = useRef<HTMLElement>(null);
+  const stickyRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(stickyRef, { once: true, amount: 0.2 });
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
@@ -43,18 +47,19 @@ export function RocketSection() {
   const flameHeight = useTransform(scrollYProgress, [0.02, 0.2, 1], [52, 108, 124]);
   const skyY = useTransform(scrollYProgress, [0, 1], [-40, 520]);
   const titleY = useTransform(scrollYProgress, [0, 0.08], [18, 0]);
-  const cardOpacity = useTransform(scrollYProgress, [0.28, 0.4, 1], [0, 1, 1]);
-  const cardY = useTransform(scrollYProgress, [0.32, 0.44], [48, 0]);
   const shakeX = useTransform(scrollYProgress, [0.08, 0.2, 0.35, 0.5], [0, 1.5, -1.2, 0]);
 
   return (
     <section
       id="rocket"
       ref={ref}
-      className="relative h-[340vh] bg-[#f7fbfe] md:h-[400vh]"
+      className="relative z-10 h-[340vh] md:h-[400vh]"
     >
-      <div className="sticky top-0 flex h-svh flex-col overflow-hidden">
-        <CircuitBackground uid="rocket" />
+      <div
+        ref={stickyRef}
+        className="sticky top-0 z-10 flex h-svh flex-col overflow-hidden"
+      >
+        <CyberVideoBackground variant="rocket" />
 
         <motion.div
           style={{ y: skyY }}
@@ -70,20 +75,19 @@ export function RocketSection() {
                 width: i % 4 === 0 ? 6 : 3,
                 height: i % 4 === 0 ? 18 : 3,
                 opacity: 0.35 + (i % 5) * 0.1,
-                borderRadius: i % 4 === 0 ? 999 : 999,
                 filter: i % 4 === 0 ? "blur(0.5px)" : undefined,
               }}
             />
           ))}
         </motion.div>
 
-        <div className="relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col px-4 pb-4 pt-20 sm:px-8">
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-[1440px] flex-col px-6 pb-4 pt-20 sm:px-10 xl:px-14">
           <motion.h2
             style={{ y: titleY }}
-            className="font-display shrink-0 text-center text-[1.65rem] font-extrabold leading-tight tracking-tight text-[#152536] sm:text-4xl lg:text-5xl"
+            className="font-display shrink-0 text-center text-[1.65rem] font-extrabold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
             Ready to superpower your business with{" "}
-            <span className="bg-gradient-to-r from-[#1aa3d8] to-[#2f9e4a] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#4ec3e0] to-[#2ee6c7] bg-clip-text text-transparent">
               NetViss
             </span>
           </motion.h2>
@@ -110,8 +114,10 @@ export function RocketSection() {
             </div>
 
             <motion.div
-              style={{ opacity: cardOpacity, y: cardY }}
-              className="max-h-[42vh] overflow-auto rounded-2xl border border-slate-200/80 bg-white/95 shadow-[0_24px_80px_rgba(20,60,90,0.12)] backdrop-blur md:max-h-none md:overflow-visible md:rounded-[28px]"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="max-h-[42vh] overflow-auto rounded-2xl border border-cyan-400/20 bg-white/95 shadow-[0_24px_80px_rgba(0,20,40,0.35)] backdrop-blur-md md:max-h-none md:overflow-visible md:rounded-[28px]"
             >
               <div className="bg-[#1aa3d8] px-5 py-3 text-center sm:px-6 sm:py-4">
                 <p className="font-display text-lg font-bold text-white sm:text-2xl">
@@ -123,12 +129,15 @@ export function RocketSection() {
               </div>
               <div>
                 {rows.map((row, i) => (
-                  <SpecRow
+                  <div
                     key={row.spec}
-                    row={row}
-                    index={i}
-                    progress={scrollYProgress}
-                  />
+                    className={`grid grid-cols-1 gap-0.5 px-4 py-2.5 text-[13px] sm:grid-cols-[1.15fr_1fr] sm:gap-3 sm:px-6 sm:py-3.5 sm:text-sm ${
+                      i % 2 === 1 ? "bg-slate-50/90" : "bg-white"
+                    }`}
+                  >
+                    <span className="font-semibold text-slate-700">{row.spec}</span>
+                    <span className="text-slate-500">{row.value}</span>
+                  </div>
                 ))}
               </div>
             </motion.div>
@@ -136,32 +145,6 @@ export function RocketSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-function SpecRow({
-  row,
-  index,
-  progress,
-}: {
-  row: { spec: string; value: string };
-  index: number;
-  progress: MotionValue<number>;
-}) {
-  const start = 0.4 + index * 0.06;
-  const opacity = useTransform(progress, [start, start + 0.07, 1], [0, 1, 1]);
-  const y = useTransform(progress, [start, start + 0.07], [14, 0]);
-
-  return (
-    <motion.div
-      style={{ opacity, y }}
-      className={`grid grid-cols-1 gap-0.5 px-4 py-2.5 text-[13px] sm:grid-cols-[1.15fr_1fr] sm:gap-3 sm:px-6 sm:py-3.5 sm:text-sm ${
-        index % 2 === 1 ? "bg-slate-50/90" : "bg-white"
-      }`}
-    >
-      <span className="font-semibold text-slate-700">{row.spec}</span>
-      <span className="text-slate-500">{row.value}</span>
-    </motion.div>
   );
 }
 
@@ -212,9 +195,9 @@ function FlyLabel({
       style={{ opacity, x }}
       className="flex items-center justify-end gap-2"
     >
-      <span className="text-[11px] font-semibold text-slate-600 sm:text-sm">{name}</span>
-      <span className="h-px w-8 bg-slate-400 lg:w-12" />
-      <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#1aa3d8] shadow-[0_0_12px_#1aa3d8]" />
+      <span className="text-[11px] font-semibold text-cyan-100 sm:text-sm">{name}</span>
+      <span className="h-px w-8 bg-cyan-400/50 lg:w-12" />
+      <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#2ee6c7] shadow-[0_0_12px_#2ee6c7]" />
     </motion.div>
   );
 }

@@ -6,11 +6,13 @@ import { RocketSection } from "@/components/RocketSection";
 
 export default function Home() {
   return (
-    <main id="top" className="flex-1">
+    <main id="top" className="relative flex-1">
       <Navbar />
       <Hero />
-      <RocketSection />
-      <ArchitectureSection />
+      <div className="relative">
+        <RocketSection />
+        <ArchitectureSection />
+      </div>
       <Footer />
     </main>
   );

@@ -330,3 +330,102 @@ svg text {
     opacity: 0;
   }
 }
+
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(26, 163, 216, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 163, 216, 0.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: cyberGridDrift 22s linear infinite;
+}
+
+@keyframes cyberGridDrift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+.cyber-hex {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66z' fill='none' stroke='%231aa3d8' stroke-opacity='0.18' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 56px 100px;
+  animation: cyberHexPulse 8s ease-in-out infinite;
+}
+
+@keyframes cyberHexPulse {
+  0%,
+  100% {
+    opacity: 0.22;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.cyber-rain {
+  animation: cyberRainFall linear infinite;
+}
+
+@keyframes cyberRainFall {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(420%);
+    opacity: 0;
+  }
+}
+
+.cyber-scan {
+  top: -20%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(46, 230, 199, 0.18),
+    transparent
+  );
+  animation: cyberScanMove 5.5s ease-in-out infinite;
+}
+
+@keyframes cyberScanMove {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(520%);
+  }
+}
+
+.cyber-node {
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.8);
+  animation: cyberNodeBlink 2.8s ease-in-out infinite;
+}
+
+@keyframes cyberNodeBlink {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+.cyber-dash {
+  stroke-dasharray: 10 14;
+  animation: cyberDashFlow 2.2s linear infinite;
+}
+
+@keyframes cyberDashFlow {
+  to {
+    stroke-dashoffset: -96;
+  }
+}
